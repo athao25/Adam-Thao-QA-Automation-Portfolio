@@ -1,6 +1,6 @@
-# Whitebox Testing Portfolio
+# Layered Architecture Tests
 
-A TypeScript/Express/MongoDB Todo API demonstrating comprehensive testing practices including unit testing, integration testing, and white box testing with Testcontainers.
+A TypeScript/Express/MongoDB Todo API demonstrating comprehensive testing practices across architectural layers including unit testing, integration testing, and system-level testing with Testcontainers.
 
 ## Tech Stack
 
@@ -14,7 +14,7 @@ A TypeScript/Express/MongoDB Todo API demonstrating comprehensive testing practi
 ## Project Structure
 
 ```
-whitebox-testing-portfolio/
+layered-architecture-tests/
 ├── src/
 │   ├── config/
 │   │   └── database.ts          # Database connection configuration
@@ -82,7 +82,7 @@ The project follows a layered architecture pattern for testability:
 - Use **Testcontainers** to spin up MongoDB containers
 - Located in `tests/integration/`
 
-### White Box Testing Techniques
+### Coverage Techniques
 - **Statement Coverage**: Ensure all code statements are executed
 - **Branch Coverage**: Test all conditional branches (if/else)
 - **Path Coverage**: Test different execution paths

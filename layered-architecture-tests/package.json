@@ -1,7 +1,7 @@
 {
-  "name": "whitebox-testing-portfolio",
+  "name": "layered-architecture-tests",
   "version": "1.0.0",
-  "description": "Todo API demonstrating unit, integration, and white box testing with Testcontainers",
+  "description": "Todo API demonstrating unit, integration, and system-level testing with a layered architecture and Testcontainers",
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
@@ -27,9 +27,10 @@
     "testing",
     "testcontainers",
     "jest",
-    "whitebox",
+    "layered-architecture",
     "unit-testing",
-    "integration-testing"
+    "integration-testing",
+    "system-testing"
   ],
   "author": "Adam Thao",
   "license": "MIT",
