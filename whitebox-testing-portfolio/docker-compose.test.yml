@@ -1,0 +1,26 @@
+services:
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    environment:
+      - NODE_ENV=test
+    volumes:
+      - ./coverage:/app/coverage
+    depends_on:
+      - dind
+    networks:
+      - test-network
+
+  # Docker-in-Docker for Testcontainers
+  dind:
+    image: docker:24-dind
+    privileged: true
+    environment:
+      - DOCKER_TLS_CERTDIR=
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
