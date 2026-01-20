@@ -1,0 +1,82 @@
+name: API Tests
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'restful-booker-api-tests/**'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'restful-booker-api-tests/**'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: restful-booker-api-tests
+
+jobs:
+  api-tests:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.12']
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('restful-booker-api-tests/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run smoke tests
+        run: pytest -v -m smoke --tb=short
+        continue-on-error: false
+
+      - name: Run all tests
+        run: pytest -v --tb=short --junitxml=test-results.xml
+        continue-on-error: true
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results-py${{ matrix.python-version }}
+          path: restful-booker-api-tests/test-results.xml
+          retention-days: 30
+
+  test-report:
+    needs: api-tests
+    runs-on: ubuntu-latest
+    if: always()
+
+    steps:
+      - name: Download test results
+        uses: actions/download-artifact@v4
+        with:
+          pattern: test-results-*
+          merge-multiple: true
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
+        if: always()
+        with:
+          report_paths: '*.xml'
+          fail_on_failure: false
+          include_passed: true

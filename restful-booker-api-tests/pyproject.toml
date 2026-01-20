@@ -1,0 +1,52 @@
+[project]
+name = "restful-booker-api-tests"
+version = "1.0.0"
+description = "Comprehensive API test automation suite for Restful-Booker API"
+authors = [{ name = "Adam Thao" }]
+readme = "README.md"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*", "it_*", "they_*"]
+addopts = "-v --tb=short"
+markers = [
+    "smoke: Quick sanity tests for critical functionality",
+    "regression: Full regression test suite",
+    "auth: Authentication related tests",
+    "booking: Booking CRUD operation tests",
+    "validation: Input validation and error handling tests",
+    "schema: Response schema validation tests",
+    "performance: Performance and load tests",
+]
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+    | \.venv
+    | __pycache__
+    | \.pytest_cache
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 100
+skip = [".git", ".venv", "__pycache__"]
+
+[tool.pylint.messages_control]
+disable = [
+    "missing-module-docstring",
+    "missing-function-docstring",
+    "missing-class-docstring",
+    "redefined-outer-name",
+    "too-few-public-methods",
+]
+
+[tool.pylint.format]
+max-line-length = 100
