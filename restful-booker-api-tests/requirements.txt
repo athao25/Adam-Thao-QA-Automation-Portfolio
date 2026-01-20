@@ -1,0 +1,27 @@
+# Core testing
+pytest>=7.4.0
+pytest-describe>=2.1.0
+pytest-html>=4.1.0
+pytest-xdist>=3.5.0
+
+# HTTP client
+requests>=2.31.0
+
+# Assertions
+expects>=0.9.0
+
+# Schema validation
+jsonschema>=4.21.0
+pydantic>=2.5.0
+
+# Test data generation
+faker>=22.0.0
+
+# Reporting and utilities
+python-dotenv>=1.0.0
+allure-pytest>=2.13.0
+
+# Code quality
+pylint>=3.0.0
+black>=24.0.0
+isort>=5.13.0
