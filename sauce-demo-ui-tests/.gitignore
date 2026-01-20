@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+
+# Environment files - DO NOT commit .env files with sensitive data
+.env
+.env.local
+.env.*.local
+
+# Test results and reports
+test-results/
+test-results.json
+playwright-report/
+playwright/.cache/
+blob-report/
+
+# Authentication state (contains session data)
+.auth/
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Build outputs
+dist/
+build/
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage reports
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Screenshots (if generated during tests)
+screenshots/
+
+# Allure reports (if using Allure)
+allure-results/
+allure-report/
