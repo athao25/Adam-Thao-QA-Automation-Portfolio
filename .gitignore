@@ -1,0 +1,66 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test Results & Reports
+/test-results/
+/playwright-report/
+/blob-report/
+coverage/
+
+# Playwright Cache
+/playwright/.cache/
+
+# Environment & Configuration
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# IDE & Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# AI Assistants
+.claude/
+.cursor/
+.continue/
+.codeium/
+claude-*.log
+.claude-session*
+.claude-memory*
+
+# Logs
+*.log
+
+# Build & Distribution
+dist/
+build/
+*.tsbuildinfo
+
+# Runtime & Cache
+.cache/
+.tmp/
+.temp/
+*.tmp
+*.temp
+
+# Screenshots & Videos
+/screenshots/
+/videos/
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
