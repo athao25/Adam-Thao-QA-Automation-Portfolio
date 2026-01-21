@@ -9,6 +9,7 @@ A comprehensive QA automation portfolio demonstrating professional testing pract
 | [Sauce Demo UI Tests](./sauce-demo-ui-tests) | End-to-end UI automation for an e-commerce application | TypeScript, Playwright |
 | [Restful Booker API Tests](./restful-booker-api-tests) | Comprehensive API test suite with schema validation | Python, pytest, requests |
 | [Layered Architecture Tests](./layered-architecture-tests) | Unit and integration testing with Testcontainers | TypeScript, Jest, MongoDB |
+| [Sock Shop Contract Tests](./sockshop-contract-tests) | Consumer-Driven Contract testing for microservices | TypeScript, Pact, Jest |
 
 ---
 
@@ -145,6 +146,60 @@ npm run docker:test       # Run tests in Docker
 
 ---
 
+## Sock Shop Contract Tests
+
+Consumer-Driven Contract (CDC) testing suite for the Sock Shop microservices platform using Pact-JS. This project demonstrates how to validate API contracts between microservices without requiring end-to-end integration environments.
+
+### Tech Stack
+- **TypeScript** - Type-safe development
+- **Pact-JS** - Contract testing framework
+- **Jest** - Test runner
+- **Express** - Mock provider servers
+- **Axios** - HTTP client
+
+### Architecture
+```
+Consumer Tests          Provider Tests
+      │                       │
+      ▼                       ▼
+┌──────────┐           ┌──────────────┐
+│  Generate │           │    Verify    │
+│   Pact    │──────────►│   Contract   │
+│   JSON    │           │   Honored    │
+└──────────┘           └──────────────┘
+```
+
+### Contracts Under Test
+| Contract | Consumer | Provider | Interactions |
+|----------|----------|----------|--------------|
+| CDC-001 | Frontend | Catalogue | 4 |
+| CDC-002 | Orders | Carts | 3 |
+| CDC-003 | Orders | Payment | 2 |
+
+### Features
+- Consumer-driven contract definition
+- Provider state handlers for test scenarios
+- Pact matchers for flexible contract validation
+- Reusable test utilities (DRY patterns)
+- CI/CD ready with GitHub Actions
+
+### Quick Start
+```bash
+cd sockshop-contract-tests
+npm install
+npm test
+```
+
+### Available Scripts
+```bash
+npm test              # Run all contract tests
+npm run test:consumer # Generate pact contracts
+npm run test:provider # Verify provider compliance
+npm run lint          # Code quality checks
+```
+
+---
+
 ## Skills Demonstrated
 
 ### Testing Practices
@@ -152,6 +207,7 @@ npm run docker:test       # Run tests in Docker
 - Page Object Model pattern
 - API client abstraction pattern
 - Layered architecture testing
+- Consumer-Driven Contract testing
 - BDD-style test organization
 - Data-driven testing
 - Schema validation
@@ -160,6 +216,7 @@ npm run docker:test       # Run tests in Docker
 - TypeScript & Python
 - Playwright & Jest
 - pytest & requests
+- Pact-JS (Contract Testing)
 - MongoDB & Testcontainers
 - Docker & Docker Compose
 - GitHub Actions CI/CD
@@ -167,6 +224,7 @@ npm run docker:test       # Run tests in Docker
 
 ### Testing Types
 - Functional testing (UI & API)
+- Contract testing (CDC)
 - Integration testing
 - Unit testing
 - Accessibility testing

@@ -1,0 +1,149 @@
+name: Contract Tests
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'sockshop-contract-tests/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'sockshop-contract-tests/**'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: sockshop-contract-tests
+
+env:
+  NODE_VERSION: '20'
+  CI: true
+
+jobs:
+  lint:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sockshop-contract-tests/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript type check
+        run: npm run build
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Check formatting
+        run: npm run format:check
+
+  consumer-tests:
+    name: Consumer Contract Tests
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sockshop-contract-tests/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create pacts directory
+        run: mkdir -p pacts logs
+
+      - name: Run consumer tests
+        run: npm run test:consumer
+
+      - name: Upload pact files
+        uses: actions/upload-artifact@v4
+        with:
+          name: pact-files
+          path: sockshop-contract-tests/pacts/*.json
+          retention-days: 7
+
+  provider-verification:
+    name: Provider Verification
+    runs-on: ubuntu-latest
+    needs: consumer-tests
+    strategy:
+      matrix:
+        provider: [catalogue, carts, payment]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+          cache-dependency-path: sockshop-contract-tests/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download pact files
+        uses: actions/download-artifact@v4
+        with:
+          name: pact-files
+          path: sockshop-contract-tests/pacts
+
+      - name: Create logs directory
+        run: mkdir -p logs
+
+      - name: Verify ${{ matrix.provider }} provider
+        run: npm run test:provider -- --testNamePattern="${{ matrix.provider }}"
+        env:
+          GIT_COMMIT: ${{ github.sha }}
+          GIT_BRANCH: ${{ github.ref_name }}
+
+  test-report:
+    name: Test Summary
+    runs-on: ubuntu-latest
+    needs: [consumer-tests, provider-verification]
+    if: always()
+    steps:
+      - name: Download pact files
+        uses: actions/download-artifact@v4
+        with:
+          name: pact-files
+          path: pacts
+        continue-on-error: true
+
+      - name: Summarize test results
+        run: |
+          echo "## Contract Test Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Generated Pact Files" >> $GITHUB_STEP_SUMMARY
+          if [ -d "pacts" ]; then
+            for file in pacts/*.json; do
+              if [ -f "$file" ]; then
+                echo "- ✅ $(basename $file)" >> $GITHUB_STEP_SUMMARY
+              fi
+            done
+          else
+            echo "- ⚠️ No pact files found" >> $GITHUB_STEP_SUMMARY
+          fi
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Provider Verification Matrix" >> $GITHUB_STEP_SUMMARY
+          echo "| Provider | Status |" >> $GITHUB_STEP_SUMMARY
+          echo "|----------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Catalogue | ${{ needs.provider-verification.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Carts | ${{ needs.provider-verification.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Payment | ${{ needs.provider-verification.result == 'success' && '✅ Passed' || '❌ Failed' }} |" >> $GITHUB_STEP_SUMMARY
